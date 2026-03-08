@@ -1,18 +1,99 @@
+/* assets/css/global.css */
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-@theme static {
-  --font-sans: 'Public Sans', sans-serif;
-
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+:root {
+  --bg: #0d0d0d;
+  --surface: #141414;
+  --panel: #1a1a1a;
+  --border: #2a2a2a;
+  --accent: #e85d04;
+  --accent2: #ffd60a;
+  --text: #e8e8e8;
+  --muted: #666;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --yellow: #f39c12;
 }
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  
+  opacity: 0.4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Shared animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.5s ease both; }
+.fade-up-1 { animation: fadeUp 0.5s 0.05s ease both; }
+.fade-up-2 { animation: fadeUp 0.5s 0.10s ease both; }
+.fade-up-3 { animation: fadeUp 0.5s 0.15s ease both; }
+.fade-up-4 { animation: fadeUp 0.5s 0.20s ease both; }
+.fade-up-5 { animation: fadeUp 0.5s 0.25s ease both; }
+.fade-up-6 { animation: fadeUp 0.5s 0.30s ease both; }
+.fade-up-7 { animation: fadeUp 0.5s 0.35s ease both; }
+
+/* Section label */
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Shared button */
+.btn-ghost {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: none;
+  border: 1px solid rgba(232,93,4,0.3);
+  padding: 5px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { background: rgba(232,93,4,0.1); }

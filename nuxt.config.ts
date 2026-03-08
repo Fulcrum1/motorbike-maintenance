@@ -8,6 +8,17 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true
   },
+  app: {
+    head: {
+      title: 'MotoTrack',
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap'
+        }
+      ]
+    }
+  },
 
   css: ['~/assets/css/main.css'],
 

@@ -1,76 +1,139 @@
 <template>
   <div>
-    <UPageHero
-      title="Nuxt Starter Template"
-      description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
-      :links="[{
-        label: 'Get started',
-        to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-        target: '_blank',
-        trailingIcon: 'i-lucide-arrow-right',
-        size: 'xl'
-      }, {
-        label: 'Use this template',
-        to: 'https://github.com/nuxt-ui-templates/starter',
-        target: '_blank',
-        icon: 'i-simple-icons-github',
-        size: 'xl',
-        color: 'neutral',
-        variant: 'subtle'
-      }]"
-    />
+    <!-- Bike Hero Banner -->
+    <DashboardBikeHero :bike="bike" />
 
-    <UPageSection
-      id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
-      :features="[{
-        icon: 'i-lucide-rocket',
-        title: 'Production-ready from day one',
-        description: 'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
-      }, {
-        icon: 'i-lucide-palette',
-        title: 'Beautiful by default',
-        description: 'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
-      }, {
-        icon: 'i-lucide-zap',
-        title: 'Lightning fast',
-        description: 'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
-      }, {
-        icon: 'i-lucide-blocks',
-        title: '100+ components included',
-        description: 'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-      }, {
-        icon: 'i-lucide-code-2',
-        title: 'Developer experience first',
-        description: 'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-      }, {
-        icon: 'i-lucide-shield-check',
-        title: 'Built for scale',
-        description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
-      }]"
-    />
+    <!-- Component Health -->
+    <div class="section-label">Component Health</div>
+    <div class="health-grid">
+      <DashboardHealthCard v-for="(card, i) in healthCards" :key="card.name" v-bind="card" :class="`fade-up-${i + 1}`"
+        @click="onHealthCardClick(card)" />
+    </div>
 
-    <UPageSection>
-      <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
-        variant="subtle"
-        :links="[{
-          label: 'Start building',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          color: 'neutral'
-        }, {
-          label: 'View on GitHub',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          color: 'neutral',
-          variant: 'outline'
-        }]"
-      />
-    </UPageSection>
+    <!-- Service Log + Next Service -->
+    <div class="section-label">Service History &amp; Upcoming</div>
+    <div class="bottom-grid">
+      <DashboardService :entries="serviceEntries" @add="onAddService" @select="onSelectEntry" />
+      <DashboardNuxtServicePanel :km-left="1819" :km-total="5000" service-type="10,000 km Full" :due-at-km="26200"
+        est-date="~April 2025" est-cost="€180 – 250" @schedule="onSchedule" />
+    </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { ServiceEntry } from '~/components/Dashboard/Service.vue'
+
+// ─── Bike data ───────────────────────────────────────────────────────────────
+const bike = {
+  make: 'Kawasaki',
+  model: 'Z650',
+  variant: '650',
+  year: 2018,
+  odometer: 25000,
+  lastServiceKm: 21200,
+  healthScore: 87,
+}
+
+// ─── Health cards ─────────────────────────────────────────────────────────────
+const healthCards = [
+  { name: 'Engine Oil', value: '72%', sub: 'Changed 3,181 km ago', date: '14 Feb 2025', percent: 72, status: 'good' as const },
+  { name: 'Drive Chain', value: '41%', sub: 'Lube overdue ~400 km', date: '03 Sep 2024', percent: 41, status: 'warn' as const },
+  { name: 'Front Tire', value: '18%', sub: 'Tread depth 1.2mm', date: '14 Feb 2025', percent: 18, status: 'crit' as const },
+  { name: 'Rear Tire', value: '18%', sub: 'Tread depth 1.2mm', date: '14 Feb 2025', percent: 18, status: 'crit' as const },
+]
+
+// ─── Service log entries ──────────────────────────────────────────────────────
+const serviceEntries: ServiceEntry[] = [
+  {
+    id: 1,
+    icon: '🛢️',
+    name: 'Full Oil &amp; Filter Change',
+    km: 25000,
+    date: '14 Feb 2025',
+    location: 'Ducati Dealer',
+    statusLabel: '✔ Done',
+    statusColor: 'var(--green)',
+    cost: '+€89',
+  },
+  {
+    id: 2,
+    icon: '⚙️',
+    name: 'Valve Clearance Check',
+    km: 18000,
+    date: '03 Sep 2024',
+    location: 'Self-Service',
+    statusLabel: '✔ Done',
+    statusColor: 'var(--green)',
+    cost: 'Free',
+  },
+  {
+    id: 3,
+    icon: '🔗',
+    name: 'Chain Lube &amp; Tension Adjust',
+    km: 20000,
+    date: '10 Jan 2025',
+    location: 'Self-Service',
+    statusLabel: '✔ Done',
+    statusColor: 'var(--green)',
+    cost: 'Free',
+  },
+  {
+    id: 4,
+    icon: '🛞',
+    name: 'Front Tyre Replacement',
+    km: 16500,
+    date: '22 Jun 2024',
+    location: 'TyrePro Shop',
+    statusLabel: '✔ Done',
+    statusColor: 'var(--green)',
+    cost: '+€145',
+  },
+  {
+    id: 5,
+    icon: '🛞',
+    name: 'Rear Tyre — <span style="color:var(--red)">Replace Now</span>',
+    km: 25000,
+    date: 'Current',
+    location: 'Tread 1.2mm (min 1.6mm)',
+    statusLabel: '⚠ Critical',
+    statusColor: 'var(--red)',
+    cost: 'ASAP',
+  },
+]
+
+// ─── Handlers ─────────────────────────────────────────────────────────────────
+function onHealthCardClick(card: typeof healthCards[0]) {
+  console.log('Health card clicked:', card.name)
+}
+
+function onQuickAction(key: string) {
+  console.log('Quick action:', key)
+}
+
+function onAddService() {
+  console.log('Add service entry')
+}
+
+function onSelectEntry(entry: ServiceEntry) {
+  console.log('Selected entry:', entry.id)
+}
+
+function onSchedule() {
+  console.log('Open scheduling flow')
+}
+</script>
+
+<style scoped>
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 16px;
+}
+</style>
