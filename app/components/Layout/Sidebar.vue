@@ -1,72 +1,59 @@
 <template>
-  <nav class="sidebar">
-    <div class="logo-mark">M</div>
+  <UDashboardSidebar
+    collapsible
+    resizable
+    :ui="{ footer: 'border-t border-default' }"
+  >
+    <template #default="{ collapsed }">
+      <USeparator />
+      <UNavigationMenu
+        :collapsed="collapsed"
+        :items="items[0]"
+        orientation="vertical"
+      />
+    </template>
 
-    <LayoutNavItem
-      v-for="item in navItems"
-      :key="item.label"
-      :icon="item.icon"
-      :label="item.label"
-      :to="item.to"
-      :active="route.path === item.to"
-    />
-
-    <LayoutNavItem
-      icon="⚙️"
-      label="Settings"
-      to="/settings"
-      :active="route.path === '/settings'"
-      class="settings-item"
-    />
-  </nav>
+    <template #footer="{ collapsed }">
+      <UButton
+        :avatar="{
+          src: 'https://github.com/benjamincanac.png',
+          loading: 'lazy' as const,
+        }"
+        color="neutral"
+        variant="ghost"
+        class="w-full"
+        :label="collapsed ? undefined : user?.name"
+        :block="collapsed"
+      />
+      <UButton
+        color="error"
+        icon="i-lucide-log-out"
+        variant="ghost"
+        class="justify-end"
+        :block="collapsed"
+        @click="logout"
+      />
+    </template>
+  </UDashboardSidebar>
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
+import type { NavigationMenuItem } from "@nuxt/ui";
 
-const navItems = [
-  { icon: '🏠', label: 'Dashboard', to: '/' },
-  { icon: '🔧', label: 'Service Log', to: '/service-log' },
-  { icon: '📊', label: 'Statistics', to: '/statistics' },
-  { icon: '🗓️', label: 'Schedule', to: '/schedule' },
-  { icon: '🧾', label: 'Receipts', to: '/receipts' },
-]
+const { user } = useUserSession();
+
+const logout = async () => {
+  await useUserSession().clear();
+  await navigateTo("/login");
+};
+
+const items: NavigationMenuItem[][] = [
+  [
+    { label: "Dashboard", icon: "i-lucide-house", to: "/" },
+    { label: "My subscriptions", icon: "i-lucide-list", to: "/subscriptions" },
+    { label: "Installment payments", icon: "i-lucide-credit-card", to: "/installment-payment" },
+    { label: "Calendar", icon: "i-lucide-calendar", to: "/calendar" },
+    { label: "Settings", icon: "i-lucide-settings", to: "/settings" },
+  ],
+];
 </script>
-
-<style scoped>
-.sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 64px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 0;
-  gap: 8px;
-  z-index: 100;
-}
-
-.logo-mark {
-  width: 36px;
-  height: 36px;
-  background: var(--accent);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-size: 16px;
-  color: white;
-  margin-bottom: 24px;
-  flex-shrink: 0;
-}
-
-.settings-item {
-  margin-top: auto;
-}
-</style>

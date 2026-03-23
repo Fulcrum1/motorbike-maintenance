@@ -1,83 +1,51 @@
 <template>
-  <header class="topbar">
-    <div class="topbar-left">
-      <div class="page-title">{{ currentPage.title }}</div>
-      <div class="breadcrumb">
-        MotoTrack / <span>{{ currentPage.section }}</span>
-      </div>
-    </div>
+  <UDashboardPanel class="overflow-auto">
+    <UDashboardToolbar>
+      <template #left>
+        <div class="flex flex-col">
+          <div class="font-bold text-lg">{{ currentPage.title }}</div>
+          <div class="text-xs text-gray-500">
+            MotoTrack / <span class="text-gray-700">{{ currentPage.section }}</span>
+          </div>
+        </div>
+      </template>
 
-    <div class="topbar-right">
-      <div class="odometer">⬡ {{ odometer.toLocaleString() }} km</div>
-      <div class="avatar" title="JD — Rider Profile">JD</div>
+      <template #right>
+        <div class="flex items-center gap-4">
+          <div class="odometer">⬡ {{ odometer.toLocaleString() }} km</div>
+          <div class="avatar" title="JD — Rider Profile">JD</div>
+        </div>
+      </template>
+    </UDashboardToolbar>
+
+    <div class="p-6">
+      <slot />
     </div>
-  </header>
+  </UDashboardPanel>
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
-
-const odometer = ref(24381)
+const route = useRoute();
+const odometer = ref(24381);
 
 const pageMap: Record<string, { title: string; section: string }> = {
-  '/': { title: 'Dashboard', section: 'My Garage' },
-  '/service-log': { title: 'Service Log', section: 'Maintenance' },
-  '/statistics': { title: 'Statistics', section: 'Analytics' },
-  '/schedule': { title: 'Schedule', section: 'Upcoming' },
-  '/receipts': { title: 'Receipts', section: 'Finance' },
-  '/settings': { title: 'Settings', section: 'Account' },
-}
+  "/": { title: "Dashboard", section: "My Garage" },
+  "/service-log": { title: "Service Log", section: "Maintenance" },
+  "/statistics": { title: "Statistics", section: "Analytics" },
+  "/schedule": { title: "Schedule", section: "Upcoming" },
+  "/receipts": { title: "Receipts", section: "Finance" },
+  "/settings": { title: "Settings", section: "Account" },
+};
 
 const currentPage = computed(
-  () => pageMap[route.path] ?? { title: 'MotoTrack', section: 'App' }
-)
+  () => pageMap[route.path] ?? { title: "MotoTrack", section: "App" },
+);
 </script>
 
 <style scoped>
-.topbar {
-  position: fixed;
-  left: 64px;
-  right: 0;
-  top: 0;
-  height: 56px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 28px;
-  gap: 20px;
-  z-index: 90;
-}
-
-.page-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.breadcrumb {
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: 0.05em;
-}
-
-.breadcrumb span {
-  color: var(--accent);
-}
-
-.topbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
 .odometer {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: monospace;
   font-size: 13px;
-  color: var(--accent2);
   background: rgba(255, 214, 10, 0.08);
   border: 1px solid rgba(255, 214, 10, 0.2);
   padding: 5px 12px;
@@ -89,7 +57,7 @@ const currentPage = computed(
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), #ff9a3c);
+  background: linear-gradient(135deg, #f59e0b, #ff9a3c);
   display: flex;
   align-items: center;
   justify-content: center;

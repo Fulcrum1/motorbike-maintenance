@@ -1,14 +1,11 @@
 <template>
-  <UApp class="app-shell">
-    <LayoutSidebar />
-    <div class="app-content">
-      <LayoutTopbar />
-      <UMain class="main-area">
+  <UApp>
+    <UMain>
+      <NuxtLayout>
         <NuxtPage />
-      </UMain>
-    </div>
+      </NuxtLayout>
+    </UMain>
   </UApp>
-
 </template>
 
 <script setup lang="ts">
